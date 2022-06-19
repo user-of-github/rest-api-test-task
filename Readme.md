@@ -11,15 +11,23 @@
 
 ## Some commands for comfortable run:  
 
-#### To build Docker-image from scratch:    
-`pip freeze > requirements.txt`  
-`docker-compose up -d --build`  
-`docker-compose exec web python manage.py makemigrations --noinput`  
-`docker-compose exec web python manage.py migrate --noinput`  
-`docker-compose exec web python manage.py createsuperuser`  
+#### To run locally:  
+1. Change `DOCKER` field in `config.json` to `false`  
+2. `python manage.py makemigrations`  
+3. `python manage.py migrate`  
+4. `python manage.py runserver`  
+
+&nbsp;  
+#### To build and run in Docker-container from scratch:   
+1. Change `DOCKER` field in `config.json` to `true`  
+2. `pip freeze > requirements.txt`  
+3. `docker-compose up -d --build`  
+4. `docker-compose exec web python manage.py makemigrations --noinput`  
+5. `docker-compose exec web python manage.py migrate --noinput`  
+6. `docker-compose exec web python manage.py createsuperuser`  
 _// optional (check db)_  
-`docker-compose exec db psql --username=<username> --dbname=<databasename>`   
-`\l` , `\dt`  
+7. `docker-compose exec db psql --username=<username> --dbname=<databasename>`   
+8. `\l` , `\dt`  
 
 
 

@@ -1,18 +1,19 @@
+import json
 import os
 from pathlib import Path
 import rest_framework
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+CONFIGURATION = json.load(open((Path(__file__).parent / '../config.json').resolve()))
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'django-insecure-jd8pfwp@7vd*%5n(1@=-o$o1m(l%yinkzbj-73+j!t%na3s-+v'  # os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG', default=False))
+DEBUG = CONFIGURATION['DEBUG']  # int(os.environ.get('DEBUG', default=False))
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -57,20 +58,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('DB_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
-        'USER': os.environ.get('DB_USER', 'user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'password'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+if CONFIGURATION['DOCKER'] == True:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+            'NAME': os.environ.get('DB_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
+            'USER': os.environ.get('DB_USER', 'user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'password'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'onlineservice',
+            'USER': 'postgres',
+            'PASSWORD': 'root',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
 
 # DATABASES = {
 #     'default': {
@@ -98,7 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -109,7 +120,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
