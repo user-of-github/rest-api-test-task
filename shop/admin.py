@@ -2,4 +2,8 @@ from django.contrib import admin
 from .models import ShopUnit
 
 
-admin.site.register(ShopUnit)
+class ShopUnitAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'name', 'date', 'type', 'price', 'parentId')
+
+
+admin.site.register(ShopUnit, ShopUnitAdmin)
