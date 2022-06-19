@@ -1,5 +1,5 @@
 from django.contrib import admin
-from shop.models import ShopUnitType
+from .models import ShopUnit
 
 
-admin.site.register(ShopUnitType)
+admin.site.register(ShopUnit)
