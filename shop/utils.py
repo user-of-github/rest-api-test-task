@@ -51,16 +51,56 @@ def check_items_for_import(items_to_check: list[dict], update_date: str) -> bool
     return True
 
 
-def create_new_item(item: dict, date: str) -> None:
-    # print('CREATING NEW: ', item['name'])
+def update_parent_prices_after_creating(item_to_start) -> None:
+    #print('UPDATING')
+    price_to_add: int = item_to_start.price
 
-    if item['type'] == SHOP_UNIT_TYPES[0][0]:
+    if item_to_start.parentId is None:
+        return
+
+    current = item_to_start
+    nexts = ShopUnit.objects.filter(id=item_to_start.parentId)
+
+    while len(nexts) != 0:
+        parent = nexts[0]
+        print('PARENT: ', parent.name)
+        parent.totally_inner_goods_count = parent.totally_inner_goods_count + 1
+        parent.total_inner_sum = parent.total_inner_sum + price_to_add
+        parent.price = parent.total_inner_sum // parent.totally_inner_goods_count
+        parent.save()
+        current = parent
+        nexts = ShopUnit.objects.filter(id=current.parentId)
+
+
+def update_parent_prices_after_deleting(nexts_initial, price_to_subtract: int, goods_count_to_subtract: int) -> None:
+    nexts = nexts_initial
+
+    while len(nexts) != 0:
+        parent = nexts[0]
+
+        parent.totally_inner_goods_count -= goods_count_to_subtract
+        parent.total_inner_sum -= price_to_subtract
+        if parent.totally_inner_goods_count != 0:
+            parent.price = parent.total_inner_sum // parent.totally_inner_goods_count
+        else:
+            parent.price = None
+
+        parent.save()
+
+        nexts = ShopUnit.objects.filter(id=parent.parentId)
+
+
+def create_new_item(item: dict, date: str) -> None:
+    if item['type'] == SHOP_UNIT_TYPES[0][0]: # category
         created_object = ShopUnit.objects.create(
             id=item['id'],
             name=item['name'],
             parentId=item['parentId'],
             type=item['type'],
-            date=parser.parse(date)
+            price=None,
+            date=parser.parse(date),
+            totally_inner_goods_count=0,
+            total_inner_sum=0
         )
     else:
         created_object = ShopUnit.objects.create(
@@ -69,7 +109,9 @@ def create_new_item(item: dict, date: str) -> None:
             parentId=item['parentId'],
             type=item['type'],
             price=item['price'],
-            date=parser.parse(date)
+            date=parser.parse(date),
+            totally_inner_goods_count=1,
+            total_inner_sum=item['price']
         )
 
     created_object.save()
@@ -85,6 +127,9 @@ def create_new_item(item: dict, date: str) -> None:
         # print('Now parents children are: ', parent.children.all())
         # print('And own children are: ', created_object.children.all())
         parent.save()
+
+    if created_object.type != SHOP_UNIT_TYPES[0][0]:
+        update_parent_prices_after_creating(created_object)
 
 
 def update_existing_item(item: dict, date: str) -> None:

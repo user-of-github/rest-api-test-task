@@ -6,6 +6,7 @@ from uuid import UUID
 
 from .utils import check_items_for_import, check_id_for_delete
 from .utils import create_new_item, update_existing_item, remove_item
+from .utils import update_parent_prices_after_deleting
 from .custom_types import Error
 from .models import ShopUnit
 
@@ -28,7 +29,7 @@ class ImportsAPIView(views.APIView):
             with_similar_id = existing_units.filter(id=item['id'])
 
             if len(with_similar_id) == 0:
-                print('CREATING NEW: ', item['name'])
+                # print('CREATING NEW: ', item['name'])
                 create_new_item(item, received_update_date)
             elif len(with_similar_id) == 1:
                 update_existing_item(item, received_update_date)
@@ -46,9 +47,18 @@ class DeleteAPIView(views.APIView):
         if len(found_item) == 0:
             return Response(Error(404, 'Item not found').to_dict(), status=status.HTTP_404_NOT_FOUND)
 
+        deleted_goods_count: int = found_item[0].totally_inner_goods_count
+        deleted_total_sum: int = found_item[0].total_inner_sum
+        parent = ShopUnit.objects.filter(id=found_item[0].parentId)
+
         remove_item(found_item[0])
+
+        if len(parent) != 0:
+            update_parent_prices_after_deleting(parent, deleted_total_sum, deleted_goods_count)
 
         return Response(status=status.HTTP_200_OK)
 
 
-
+class NodesAPIView(views.APIView):
+    def get(self, request: Request, to_get: str) -> Response:
+        return Response(status=status.HTTP_200_OK)
