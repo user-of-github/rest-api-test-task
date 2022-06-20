@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from dateutil import parser
 from .custom_types import SHOP_UNIT_TYPES
 from .models import ShopUnit
 
@@ -10,6 +10,10 @@ def check_items_for_import(items_to_check: list[dict], update_date: str) -> bool
     ids_set: set = set()
 
     for item_to_check in items_to_check:
+        # check name
+        if item_to_check['name'] is None:
+            return False
+
         # check that all ids are different
         if item_to_check['id'] in ids_set:
             return False
@@ -46,13 +50,15 @@ def check_items_for_import(items_to_check: list[dict], update_date: str) -> bool
 
 
 def create_new_item(item: dict, date: str) -> None:
+    # print('CREATING NEW: ', item['name'])
+
     if item['type'] == SHOP_UNIT_TYPES[0][0]:
         created_object = ShopUnit.objects.create(
             id=item['id'],
             name=item['name'],
             parentId=item['parentId'],
             type=item['type'],
-            date=datetime.fromisoformat(str(date).replace('Z', '+00:00'))
+            date=parser.parse(date)
         )
     else:
         created_object = ShopUnit.objects.create(
@@ -61,15 +67,44 @@ def create_new_item(item: dict, date: str) -> None:
             parentId=item['parentId'],
             type=item['type'],
             price=item['price'],
-            date=datetime.fromisoformat(str(date).replace('Z', '+00:00'))
+            date=parser.parse(date)
         )
 
-    print('parentId ', item['parentId'])
-    if item['parentId'] is not None:
-        parent = ShopUnit.objects.filter(id=item['parentId'])[0]
-        print('Parent: ', parent)
+    created_object.save()
+    # print('CREATED')
+    # print('Now own children are: ', created_object.children.all())
+    # print('ParentId is: ', created_object.parentId)
+
+    if created_object.parentId is not None:
+        # print('Looking parent for ', created_object.name)
+        parent = ShopUnit.objects.filter(id=created_object.parentId)[0]
+        # print('So parent is: ', parent.name)
         parent.children.add(created_object)
+        # print('Now parents children are: ', parent.children.all())
+        # print('And own children are: ', created_object.children.all())
+        parent.save()
 
 
-def update_existing_item(item: dict) -> None:
-    pass
+def update_existing_item(item: dict, date: str) -> None:
+    existing_item = ShopUnit.objects.get(id=item['id'])
+
+    existing_item.name = item['name']
+    existing_item.date = parser.parse(date)
+
+    if item['type'] != SHOP_UNIT_TYPES[0][0]:
+        existing_item.price = item['price']
+
+    if existing_item.parentId is not None and existing_item.parentId != item['parentId']:
+        previous_parent = ShopUnit.objects.get(id=existing_item.parentId)
+        previous_parent.children.remove(existing_item)
+        previous_parent.save()
+
+        existing_item.parentId = item['parentId']
+
+        if existing_item.parentId is not None:
+            new_parent = ShopUnit.objects.filter(id=existing_item.parentId)[0]
+            new_parent.children.add(existing_item)
+            new_parent.save()
+
+    existing_item.save()
+

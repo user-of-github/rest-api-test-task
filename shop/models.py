@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.postgres.fields import ArrayField
 from .custom_types import SHOP_UNIT_TYPES
 
 
@@ -10,7 +10,7 @@ class ShopUnit(models.Model):
     parentId = models.CharField(max_length=100, null=True)
     type = models.CharField(max_length=100, null=False, choices=SHOP_UNIT_TYPES)
     price = models.IntegerField(null=True)
-    children = models.ManyToManyField('self')
+    children = models.ManyToManyField('ShopUnit')
 
     def __str__(self):
         return f'{self.type} | {self.name}'

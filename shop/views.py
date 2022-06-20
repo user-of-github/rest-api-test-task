@@ -26,8 +26,9 @@ class ImportsAPIView(views.APIView):
             with_similar_id = existing_units.filter(id=item['id'])
 
             if len(with_similar_id) == 0:
+                print('CREATING NEW: ', item['name'])
                 create_new_item(item, received_update_date)
             elif len(with_similar_id) == 1:
-                update_existing_item(item)
+                update_existing_item(item, received_update_date)
 
         return Response(status.HTTP_200_OK)
