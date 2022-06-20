@@ -1,4 +1,6 @@
 from datetime import datetime
+from uuid import UUID
+
 from dateutil import parser
 from .custom_types import SHOP_UNIT_TYPES
 from .models import ShopUnit
@@ -108,3 +110,26 @@ def update_existing_item(item: dict, date: str) -> None:
 
     existing_item.save()
 
+
+def check_id_for_delete(to_delete: str) -> bool:
+    if to_delete is None:
+        return False
+
+    try:
+        uuid_obj = UUID(to_delete)
+    except ValueError:
+        return False
+
+    return True
+
+
+def remove_item(element) -> None:
+    if element.type != SHOP_UNIT_TYPES[0][0]:
+        element.delete()
+    else:
+        all_children = element.children.all()
+
+        for child in all_children:
+            remove_item(child)
+
+        element.delete()
