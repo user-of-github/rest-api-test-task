@@ -22,5 +22,5 @@ jobs:
     - name: Build and push
       run: |
         docker build . -t goodsservice
-        docker tag goodsservice ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_MOVIES_SERVICE_SERVER_REPOSITORY }}
-        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_MOVIES_SERVICE_SERVER_REPOSITORY }} 
+        docker tag goodsservice ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}
+        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}
