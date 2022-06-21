@@ -1,4 +1,4 @@
-# Test task to Yandex Back-End School 2022   
+# Test task to Back-End School 2022   
 ![coverage](./coverage.svg)
 
 ### Technologies used:  
