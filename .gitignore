@@ -7,16 +7,6 @@ obj/
 Debug/
 
 
-*.sln
-*.csproj
-*.user
-
-.sln/
-.csproj/
-.user/
-.vs/
-
-
 __pycache__/
 
 # C extensions
@@ -66,3 +56,6 @@ target/
 .ropeproject
 .drawio
 *.drawio
+
+response.json
+expected.json

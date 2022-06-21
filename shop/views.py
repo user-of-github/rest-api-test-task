@@ -3,12 +3,12 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 
 
-from .utils import check_items_for_import, check_valid_uuid
+from .validators import check_items_for_import, check_valid_uuid
 from .utils import create_new_item, update_existing_item, remove_item
 from .utils import update_parent_prices_after_deleting
 from .custom_types import Error
 from .models import ShopUnit
-from .serializers import ShopUnitSerializer, data_to_dict
+from .serializers import data_to_dict
 
 
 class ImportsAPIView(views.APIView):

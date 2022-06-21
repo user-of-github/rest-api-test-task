@@ -1,23 +1,4 @@
-from rest_framework import serializers
-from .models import ShopUnit
 from .custom_types import SHOP_UNIT_TYPES
-
-
-class RecursiveField(serializers.Serializer):
-    def to_representation(self, value):
-        serializer = self.parent.parent.__class__(value, context=self.context)
-        if self.parent.parent.__class__(value)['type'].value != SHOP_UNIT_TYPES[0][0]:
-            return None
-
-        return serializer.data
-
-
-class ShopUnitSerializer(serializers.ModelSerializer):
-    children = RecursiveField(many=True)
-
-    class Meta:
-        model = ShopUnit
-        fields = ('id', 'name', 'type', 'parentId', 'date', 'price', 'children')
 
 
 def data_to_dict(data) -> dict:
