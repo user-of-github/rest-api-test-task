@@ -1,12 +1,11 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from .custom_types import SHOP_UNIT_TYPES
 
 
 class ShopUnit(models.Model):
     id = models.CharField(max_length=100, null=False, primary_key=True)
     name = models.CharField(max_length=100, null=False)
-    date = models.DateTimeField(null=False)
+    date = models.CharField(max_length=40, null=False)
     parentId = models.CharField(max_length=100, null=True)
     type = models.CharField(max_length=100, null=False, choices=SHOP_UNIT_TYPES)
     price = models.IntegerField(null=True, default=0)
