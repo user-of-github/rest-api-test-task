@@ -3,10 +3,11 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 
 
-from .validators import check_items_for_import, check_valid_uuid
+from .validators import check_items_for_import, check_valid_uuid, check_date_iso
 from .utils import create_new_item, update_existing_item, remove_item
 from .utils import update_parent_prices_after_deleting
-from .custom_types import Error
+from .utils import satisfies_date_interval
+from .custom_types import Error, SHOP_UNIT_TYPES
 from .models import ShopUnit
 from .serializers import data_to_dict
 
@@ -72,3 +73,23 @@ class NodesAPIView(views.APIView):
         found_item = found_items[0]
 
         return Response(data_to_dict(found_item), status=status.HTTP_200_OK)
+
+
+class SalesAPIView(views.APIView):
+    def get(self, request: Request) -> Response:
+        if 'date' not in request.query_params:
+            return Response(Error(400, 'Validation Failed').to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        date_to_get: str = request.query_params['date']
+
+        if not check_date_iso(date_to_get):
+            return Response(Error(400, 'Validation Failed').to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        all_offers = ShopUnit.objects.filter(type=SHOP_UNIT_TYPES[1][1])
+        response: list = list()
+
+        for offer in all_offers:
+            if satisfies_date_interval(offer.date, date_to_get):
+                response.append(data_to_dict(offer, False))
+
+        return Response(response, status=status.HTTP_200_OK)

@@ -27,8 +27,14 @@
 6. `docker-compose exec web python manage.py createsuperuser`  
 _// optional (check db)_  
 7. `docker-compose exec db psql --username=<username> --dbname=<databasename>`   
-8. `\l` , `\dt`  
+8. `\l` , `\dt`   
 
+
+### Some demo:  
+##### Local tests pass results:  
+![Import, Nodes, Sales, Delete](local_test_results.PNG)  
+
+&nbsp;  
 
 
 

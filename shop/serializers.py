@@ -1,7 +1,7 @@
 from .custom_types import SHOP_UNIT_TYPES
 
 
-def data_to_dict(data) -> dict:
+def data_to_dict(data, with_children: bool = True) -> dict:
     response: dict = dict()
 
     response['id'] = data.id
@@ -11,11 +11,14 @@ def data_to_dict(data) -> dict:
     response['date'] = data.date
     response['price'] = data.price
 
+    if not with_children:
+        return response
+
     if data.type == SHOP_UNIT_TYPES[0][0]:
         response['children'] = list()
 
         for child in data.children.all():
-            response['children'].append(data_to_dict(child))
+            response['children'].append(data_to_dict(child, True))
     else:
         response['children'] = None
 

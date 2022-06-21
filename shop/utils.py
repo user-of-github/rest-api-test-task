@@ -1,5 +1,6 @@
 from .custom_types import SHOP_UNIT_TYPES
 from .models import ShopUnit
+from dateutil import parser
 
 
 def update_parent_prices_after_creating(item_to_start) -> None:
@@ -60,7 +61,7 @@ def update_parent_prices_after_item_updating(nexts_initial, price: int, count: i
 
 
 def update_parents_date_after_item_updating(nexts_initial, date: str) -> None:
-    print('UPDATING PARENTS DATE')
+    #print('UPDATING PARENTS DATE')
     nexts = nexts_initial
 
     while len(nexts) != 0:
@@ -144,6 +145,7 @@ def update_existing_item(item: dict, date: str) -> None:
             new_parent.children.add(existing_item)
             new_parent.save()
 
+    #print('KEK')
     update_parent_prices_after_item_updating(ShopUnit.objects.filter(id=existing_item.parentId), existing_item.total_inner_sum, existing_item.totally_inner_goods_count)
     update_parents_date_after_item_updating(ShopUnit.objects.filter(id=existing_item.parentId), date)
 
@@ -160,3 +162,13 @@ def remove_item(element) -> None:
             remove_item(child)
 
         element.delete()
+
+
+def satisfies_date_interval(item_date_source: str, right_date_range_border_source: str) -> bool:
+    SECONDS_IN_DAY: int = 3600
+    HOURS_IN_DAY: int = 24
+
+    right_border = parser.parse(right_date_range_border_source)
+    item_date = parser.parse(item_date_source)
+
+    return (right_border >= item_date) and ((right_border - item_date).total_seconds() / SECONDS_IN_DAY <= HOURS_IN_DAY)

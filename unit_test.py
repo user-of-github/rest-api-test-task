@@ -200,11 +200,11 @@ def deep_sort_children(node):
 
 def print_diff(expected, response):
     with open("expected.json", "w") as f:
-        json.dump(expected, f, indent=2, ensure_ascii=False, sort_keys=True)
+        json.dump(expected, f, sort_keys=True)
         f.write("\n")
 
     with open("response.json", "w") as f:
-        json.dump(response, f, indent=2, ensure_ascii=False, sort_keys=True)
+        json.dump(response, f, sort_keys=True)
         f.write("\n")
 
     subprocess.run(["git", "--no-pager", "diff", "--no-index",
@@ -231,6 +231,7 @@ def test_nodes():
     deep_sort_children(EXPECTED_TREE)
     if response != EXPECTED_TREE:
         print_diff(EXPECTED_TREE, response)
+        # print(response)
         print("Response tree doesn't match expected tree.")
         sys.exit(1)
 
@@ -271,7 +272,7 @@ def test_delete():
 def test_all():
     test_import()
     test_nodes()
-    #test_sales()
+    test_sales()
     #test_stats()
     test_delete()
 
