@@ -39,6 +39,8 @@ _// optional (check db)_
 
 
 ### Some demo:  
+##### GitHub Actions demo:  
+![GitHub Actions output](github-actions-demo.PNG)
 ##### Local tests pass results:  
 ![Import, Nodes, Sales, Delete](local_test_results.PNG)  
 
