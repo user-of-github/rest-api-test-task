@@ -1,5 +1,5 @@
 # Test task to Yandex Back-End School 2022   
-
+![coverage](./coverage.svg)
 
 ### Technologies used:  
 * _Python_
@@ -11,11 +11,19 @@
 
 ## Some commands for comfortable run:  
 
-#### To run locally:  
-1. Change `DOCKER` field in `config.json` to `false`  
-2. `python manage.py makemigrations`  
-3. `python manage.py migrate`  
-4. `python manage.py runserver`  
+#### To run tests (pytest)  
+1. `pip install -r requirements.txt`  
+2. `coverage run -m pytest`  
+3. `coverage report` or `coverage html` (for generating report in HTML)
+4. `coverage-badge -o coverage.svg`
+&nbsp;   
+
+#### To run application locally:  
+1. `pip install -r requirements.txt`
+2. Change `DOCKER` field in `config.json` to `false`  
+3. `python manage.py makemigrations`  
+4. `python manage.py migrate`  
+5. `python manage.py runserver localhost:80` (or other port)  
 
 &nbsp;  
 #### To build and run in Docker-container from scratch:   

@@ -60,6 +60,9 @@ def check_items_for_import(items_to_check: list[dict], update_date: str) -> bool
         if item_to_check['type'] != SHOP_UNIT_TYPES[0][0] and item_to_check['price'] < 0:
             return False
 
+        if not check_valid_uuid(item_to_check['id']):
+            return False
+
         new_units.append(item_to_check)
 
     # check date
