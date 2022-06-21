@@ -2,13 +2,13 @@ from rest_framework import views, status
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from uuid import UUID
 
-from .utils import check_items_for_import, check_id_for_delete
+from .utils import check_items_for_import, check_valid_uuid
 from .utils import create_new_item, update_existing_item, remove_item
 from .utils import update_parent_prices_after_deleting
 from .custom_types import Error
 from .models import ShopUnit
+from .serializers import ShopUnitSerializer, data_to_dict
 
 
 class ImportsAPIView(views.APIView):
@@ -39,7 +39,7 @@ class ImportsAPIView(views.APIView):
 
 class DeleteAPIView(views.APIView):
     def delete(self, request: Request, to_delete: str = None) -> Response:
-        if not check_id_for_delete(to_delete):
+        if not check_valid_uuid(to_delete):
             return Response(Error(400, 'Validation Failed').to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
         found_item = ShopUnit.objects.filter(id=to_delete)
@@ -61,4 +61,14 @@ class DeleteAPIView(views.APIView):
 
 class NodesAPIView(views.APIView):
     def get(self, request: Request, to_get: str) -> Response:
-        return Response(status=status.HTTP_200_OK)
+        if not check_valid_uuid(to_get):
+            return Response(Error(400, 'Validation Failed').to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        found_items = ShopUnit.objects.filter(id=to_get)
+
+        if len(found_items) == 0:
+            return Response(Error(404, 'Item not found').to_dict(), status=status.HTTP_404_NOT_FOUND)
+
+        found_item = found_items[0]
+
+        return Response(data_to_dict(found_item), status=status.HTTP_200_OK)

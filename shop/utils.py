@@ -186,7 +186,7 @@ def update_existing_item(item: dict, date: str) -> None:
     existing_item.save()
 
 
-def check_id_for_delete(to_delete: str) -> bool:
+def check_valid_uuid(to_delete: str) -> bool:
     if to_delete is None:
         return False
 
