@@ -90,6 +90,24 @@ def update_parent_prices_after_deleting(nexts_initial, price_to_subtract: int, g
         nexts = ShopUnit.objects.filter(id=parent.parentId)
 
 
+def update_parent_prices_after_item_updating(nexts_initial, price: int, count: int) -> None:
+    nexts = nexts_initial
+
+    while len(nexts) != 0:
+        parent = nexts[0]
+
+        parent.totally_inner_goods_count += count
+        parent.total_inner_sum += price
+        if parent.totally_inner_goods_count != 0:
+            parent.price = parent.total_inner_sum // parent.totally_inner_goods_count
+        else:
+            parent.price = None
+
+        parent.save()
+
+        nexts = ShopUnit.objects.filter(id=parent.parentId)
+
+
 def create_new_item(item: dict, date: str) -> None:
     if item['type'] == SHOP_UNIT_TYPES[0][0]: # category
         created_object = ShopUnit.objects.create(
@@ -135,12 +153,22 @@ def create_new_item(item: dict, date: str) -> None:
 def update_existing_item(item: dict, date: str) -> None:
     existing_item = ShopUnit.objects.get(id=item['id'])
 
+    # firstly remove price and counts from statistics (maybe we move whole category, for example)
+    if existing_item.parentId is not None:
+        update_parent_prices_after_deleting(
+            ShopUnit.objects.filter(id=existing_item.parentId),
+            existing_item.total_inner_sum,
+            existing_item.totally_inner_goods_count
+        )
+
     existing_item.name = item['name']
     existing_item.date = parser.parse(date)
 
     if item['type'] != SHOP_UNIT_TYPES[0][0]:
         existing_item.price = item['price']
+        existing_item.total_inner_sum = item['price']
 
+    # logics of moving
     if existing_item.parentId is not None and existing_item.parentId != item['parentId']:
         previous_parent = ShopUnit.objects.get(id=existing_item.parentId)
         previous_parent.children.remove(existing_item)
@@ -152,6 +180,8 @@ def update_existing_item(item: dict, date: str) -> None:
             new_parent = ShopUnit.objects.filter(id=existing_item.parentId)[0]
             new_parent.children.add(existing_item)
             new_parent.save()
+
+    update_parent_prices_after_item_updating(ShopUnit.objects.filter(id=existing_item.parentId), existing_item.total_inner_sum, existing_item.totally_inner_goods_count)
 
     existing_item.save()
 
