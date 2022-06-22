@@ -26,7 +26,7 @@ def check_valid_uuid(to_delete: str) -> bool:
     return True
 
 
-def check_items_for_import(items_to_check: list[dict], update_date: str) -> bool:
+def check_items_for_import(items_to_check: list, update_date: str) -> bool:
     existing_units = ShopUnit.objects
     new_units: list = list()
     ids_set: set = set()
