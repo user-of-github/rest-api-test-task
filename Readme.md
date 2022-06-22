@@ -15,7 +15,7 @@
 1. `pip install -r requirements.txt`  
 2. `coverage run -m pytest`  
 3. `coverage report` or `coverage html` (for generating report in HTML)
-4. `coverage-badge -o coverage.svg`
+4. Remove `coverage-badge` file and run `coverage-badge -o coverage.svg`
 &nbsp;   
 
 #### To run application locally:  

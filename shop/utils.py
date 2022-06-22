@@ -4,24 +4,33 @@ from dateutil import parser
 
 
 def update_parent_prices_after_creating(item_to_start) -> None:
-    #print('UPDATING')
     price_to_add: int = item_to_start.price
 
     if item_to_start.parentId is None:
         return
 
-    current = item_to_start
     nexts = ShopUnit.objects.filter(id=item_to_start.parentId)
 
     while len(nexts) != 0:
         parent = nexts[0]
-        print('PARENT: ', parent.name)
         parent.totally_inner_goods_count = parent.totally_inner_goods_count + 1
         parent.total_inner_sum = parent.total_inner_sum + price_to_add
         parent.price = parent.total_inner_sum // parent.totally_inner_goods_count
         parent.save()
-        current = parent
-        nexts = ShopUnit.objects.filter(id=current.parentId)
+        nexts = ShopUnit.objects.filter(id=parent.parentId)
+
+
+def update_parent_date_after_creating(item_to_start, new_date) -> None:
+    if item_to_start.parentId is None:
+        return
+
+    nexts = ShopUnit.objects.filter(id=item_to_start.parentId)
+
+    while len(nexts) != 0:
+        parent = nexts[0]
+        parent.date = new_date
+        parent.save()
+        nexts = ShopUnit.objects.filter(id=parent.parentId)
 
 
 def update_parent_prices_after_deleting(nexts_initial, price_to_subtract: int, goods_count_to_subtract: int) -> None:
@@ -50,6 +59,7 @@ def update_parent_prices_after_item_updating(nexts_initial, price: int, count: i
 
         parent.totally_inner_goods_count += count
         parent.total_inner_sum += price
+
         if parent.totally_inner_goods_count != 0:
             parent.price = parent.total_inner_sum // parent.totally_inner_goods_count
         else:
@@ -61,12 +71,11 @@ def update_parent_prices_after_item_updating(nexts_initial, price: int, count: i
 
 
 def update_parents_date_after_item_updating(nexts_initial, date: str) -> None:
-    #print('UPDATING PARENTS DATE')
     nexts = nexts_initial
 
     while len(nexts) != 0:
         parent = nexts[0]
-        print('parent ', parent.name)
+        print(f'UPDATING {parent.name} from {parent.date} to {date}')
         parent.date = date
         parent.save()
         nexts = ShopUnit.objects.filter(id=parent.parentId)
@@ -97,21 +106,15 @@ def create_new_item(item: dict, date: str) -> None:
         )
 
     created_object.save()
-    # print('CREATED')
-    # print('Now own children are: ', created_object.children.all())
-    # print('ParentId is: ', created_object.parentId)
 
     if created_object.parentId is not None:
-        # print('Looking parent for ', created_object.name)
         parent = ShopUnit.objects.filter(id=created_object.parentId)[0]
-        # print('So parent is: ', parent.name)
         parent.children.add(created_object)
-        # print('Now parents children are: ', parent.children.all())
-        # print('And own children are: ', created_object.children.all())
         parent.save()
 
     if created_object.type != SHOP_UNIT_TYPES[0][0]:
         update_parent_prices_after_creating(created_object)
+        update_parent_date_after_creating(created_object, date)
 
 
 def update_existing_item(item: dict, date: str) -> None:
@@ -127,6 +130,7 @@ def update_existing_item(item: dict, date: str) -> None:
 
     existing_item.name = item['name']
     existing_item.date = date
+    existing_item.save()
 
     if item['type'] != SHOP_UNIT_TYPES[0][0]:
         existing_item.price = item['price']
@@ -145,8 +149,8 @@ def update_existing_item(item: dict, date: str) -> None:
             new_parent.children.add(existing_item)
             new_parent.save()
 
-    #print('KEK')
     update_parent_prices_after_item_updating(ShopUnit.objects.filter(id=existing_item.parentId), existing_item.total_inner_sum, existing_item.totally_inner_goods_count)
+    # print(f'NOW WILL UPDATE PARENT DATE TO {date}')
     update_parents_date_after_item_updating(ShopUnit.objects.filter(id=existing_item.parentId), date)
 
     existing_item.save()

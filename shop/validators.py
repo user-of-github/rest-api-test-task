@@ -39,6 +39,7 @@ def check_items_for_import(items_to_check: list, update_date: str) -> bool:
         # check that all ids are different
         if item_to_check['id'] in ids_set:
             return False
+
         ids_set.add(item_to_check['id'])
 
         # check parent

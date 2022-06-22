@@ -1,4 +1,4 @@
-name: Test Django-Rest-Framework application via Unit Test
+name: Test Django-Rest-Framework application via PyTest
 
 on: [push]
 
@@ -28,10 +28,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install pytest-django
     - name: Run migrations
       run: |
         python manage.py makemigrations
         python manage.py migrate
     - name: Run tests
       run: |
-        python unit_test.py
+        python -m coverage run -m pytest
+        python -m coverage report

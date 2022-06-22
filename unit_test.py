@@ -1,5 +1,3 @@
-# encoding=utf8
-
 import json
 import re
 import subprocess
@@ -8,7 +6,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-API_BASEURL = "http://localhost:80"
+API_BASEURL = 'http://127.0.0.1:8000'
+
 
 ROOT_ID = "069cb8d7-bbdd-47d3-ad8f-82ef4c269df1"
 
@@ -225,7 +224,7 @@ def test_nodes():
     status, response = request(f"/nodes/{ROOT_ID}", json_response=True)
     # print(json.dumps(response, indent=2, ensure_ascii=False))
 
-    assert status == 200, f"Expected HTTP status code 200, got {status}"
+    assert status == 200, f'Expected HTTP status code 200, got {status}'
 
     deep_sort_children(response)
     deep_sort_children(EXPECTED_TREE)
@@ -235,14 +234,16 @@ def test_nodes():
         print("Response tree doesn't match expected tree.")
         sys.exit(1)
 
-    print("Test nodes passed.")
+    print('Test nodes passed.')
 
 
 def test_sales():
     params = urllib.parse.urlencode({
         "date": "2022-02-04T00:00:00.000Z"
     })
-    status, response = request(f"/sales?{params}", json_response=True)
+    status, response = request(f'/sales?{params}', json_response=True)
+    # print(response)
+    # print(status)
     assert status == 200, f"Expected HTTP status code 200, got {status}"
     print("Test sales passed.")
 

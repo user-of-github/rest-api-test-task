@@ -73,13 +73,23 @@ if CONFIGURATION['DOCKER'] == True:
         }
     }
 else:
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'NAME': 'd2n3ba1ushpvok',
+    #         'USER': 'jpdfcrppiqgfut',
+    #         'PASSWORD': '136a7f5787e41773c75aef3b90d612510dc0951fa63a671608089a569a52385c',
+    #         'HOST': 'ec2-176-34-215-248.eu-west-1.compute.amazonaws.com',
+    #         'PORT': '5432',
+    #     }
+    # }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'd2n3ba1ushpvok',
-            'USER': 'jpdfcrppiqgfut',
-            'PASSWORD': '136a7f5787e41773c75aef3b90d612510dc0951fa63a671608089a569a52385c',
-            'HOST': 'ec2-176-34-215-248.eu-west-1.compute.amazonaws.com',
+            'NAME': 'onlineservice',
+            'USER': 'postgres',
+            'PASSWORD': 'root',
+            'HOST': 'localhost',
             'PORT': '5432',
         }
     }

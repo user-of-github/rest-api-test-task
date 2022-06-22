@@ -24,15 +24,16 @@ class ImportsAPIView(views.APIView):
         if not check_result:
             return Response(Error(400, 'Validation Failed').to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
-        existing_units = ShopUnit.objects
-
         for item in received_items:
+            existing_units = ShopUnit.objects
             with_similar_id = existing_units.filter(id=item['id'])
+            print(existing_units)
 
             if len(with_similar_id) == 0:
                 # print('CREATING NEW: ', item['name'])
                 create_new_item(item, received_update_date)
             elif len(with_similar_id) == 1:
+                # print(f'VIEW: GONNA UPDATE {item["name"]}')
                 update_existing_item(item, received_update_date)
 
         return Response(status=status.HTTP_200_OK)
