@@ -18,7 +18,7 @@
 4. Remove `coverage-badge` file and run `coverage-badge -o coverage.svg`
 &nbsp;   
 
-#### To run application locally:  
+#### To run application locally (you must have PostgreSQL installed and set up):  
 1. `pip install -r requirements.txt`
 2. Change `DOCKER` field in `config.json` to `false`  
 3. `python manage.py makemigrations`  

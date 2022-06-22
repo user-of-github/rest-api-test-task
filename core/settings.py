@@ -87,7 +87,7 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'onlineservice',
-            'USER': 'postgres',
+            'USER': 'postgres2',
             'PASSWORD': 'root',
             'HOST': 'localhost',
             'PORT': '5432',
