@@ -25,6 +25,13 @@
 4. `python manage.py migrate`  
 5. `python manage.py runserver localhost:80` (or other port)  
 
+#### To set up remote machine:  
+1. `git clone <this_repo_url>`  
+2. `cd rest-api-test-task`  
+3. `python3 -m venv venv`  
+4. `source venv/bin/activate`  
+5. `pip3 install -r requirements.txt`  
+6. 
 &nbsp;  
 #### To build and run in Docker-container from scratch:   
 1. Change `DOCKER` field in `config.json` to `true`  
