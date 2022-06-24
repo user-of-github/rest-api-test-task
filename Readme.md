@@ -33,11 +33,12 @@
 6. `python manage.py runserver 0.0.0.0:80` (or other port, for example)  
 
 #### To run application locally [with Docker] (build & run)
-1. `(sudo) docker-compose up -d --build`
-2. `(sudo) docker-compose exec web python manage.py makemigrations`  
-3. `(sudo) docker-compose exec web python manage.py migrate`  
-4. [optional] `(sudo) docker-compose exec web python manage.py createsuperuser`
-5. `(sudo) docker-compose up`
+1. !!! If not having other images, it's better to build from scratch. `docker system prune -a --volumes`
+2. `(sudo) docker-compose up -d --build`
+3. `(sudo) docker-compose exec web python manage.py makemigrations`  
+4. `(sudo) docker-compose exec web python manage.py migrate`  
+5. [optional] `(sudo) docker-compose exec web python manage.py createsuperuser`
+6. `(sudo) docker-compose up`
 
 ### • To deploy:
 #### To set up remote machine:
