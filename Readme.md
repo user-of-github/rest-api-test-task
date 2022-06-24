@@ -33,11 +33,11 @@
 6. `python manage.py runserver 0.0.0.0:80` (or other port, for example)  
 
 #### To run application locally [with Docker] (build & run)
-1. `docker-compose up -d --build`
-2. `docker-compose exec web python manage.py makemigrations --noinput`  
-3. `docker-compose exec web python manage.py migrate --noinput`  
-4. [optional] `docker-compose exec web python manage.py createsuperuser`
-5. `docker-compose up`
+1. `(sudo) docker-compose up -d --build`
+2. `(sudo) docker-compose exec web python manage.py makemigrations --noinput`  
+3. `(sudo) docker-compose exec web python manage.py migrate --noinput`  
+4. [optional] `(sudo) docker-compose exec web python manage.py createsuperuser`
+5. `(sudo) docker-compose up`
 
 ### • To deploy:
 #### To set up remote machine:

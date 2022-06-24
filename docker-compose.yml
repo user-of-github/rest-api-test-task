@@ -10,7 +10,7 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:12-alpine
+    image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     expose:
