@@ -14,8 +14,10 @@ DEBUG = CONFIGURATION['DEBUG']  # int(os.environ.get('DEBUG', default=False))
 
 CORS_ALLOW_ALL_ORIGINS = True  # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
 CORS_ALLOW_CREDENTIALS = True
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://responses-1920.usr.yandex-academy.ru',
     'https://*.yandex-academy.ru',
     'http://localhost',
     'http://localhost:8000',
