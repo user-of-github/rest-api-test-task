@@ -1,7 +1,6 @@
 import json
 import os
 from pathlib import Path
-import rest_framework
 
 CONFIGURATION = json.load(open((Path(__file__).parent / '../config.json').resolve()))
 
@@ -13,7 +12,21 @@ SECRET_KEY = 'django-insecure-jd8pfwp@7vd*%5n(1@=-o$o1m(l%yinkzbj-73+j!t%na3s-+v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = CONFIGURATION['DEBUG']  # int(os.environ.get('DEBUG', default=False))
 
-ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True  # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.yandex-academy.ru',
+    'http://localhost',
+    'http://localhost:8000',
+    'http://localhost:80',
+    'http://0.0.0.0',
+    'http://0.0.0.0:80',
+    'http://0.0.0.0:8000',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1',
+    'http://127.0.0.1:80'
+]
 
 # Application definition
 
@@ -25,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'shop'
+    'shop',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -36,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'core.urls'
