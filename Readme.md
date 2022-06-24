@@ -34,8 +34,8 @@
 
 #### To run application locally [with Docker] (build & run)
 1. `(sudo) docker-compose up -d --build`
-2. `(sudo) docker-compose exec web python manage.py makemigrations --noinput`  
-3. `(sudo) docker-compose exec web python manage.py migrate --noinput`  
+2. `(sudo) docker-compose exec web python manage.py makemigrations`  
+3. `(sudo) docker-compose exec web python manage.py migrate`  
 4. [optional] `(sudo) docker-compose exec web python manage.py createsuperuser`
 5. `(sudo) docker-compose up`
 
