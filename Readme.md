@@ -9,38 +9,61 @@
 * _PyTest_     
 
 
-## Some commands for comfortable run:  
-
-#### To run tests (pytest)  
+## _Some commands for comfortable run:_  
+### • To test:  
+#### To run tests [pytest]:  
 1. Activate venv
 2. `pip install -r requirements.txt`  
 3. `coverage run -m pytest`  
 4. `coverage report` or `coverage html` (for generating report in HTML)
-5. Remove `coverage-badge.svg` file and run `coverage-badge -o coverage.svg`
-&nbsp;   
+5. Remove `coverage-badge.svg` file and run `coverage-badge -o coverage.svg`  
 
-#### To run application locally (you must have PostgreSQL installed and set up):  
+#### To run tests [unittest from task-source]:   
+1. `pip install -r requirements.txt` 
+2. Run server in Docker (see below how to run in docker) or in usual way ()
+3. `python unit_test.py`
+
+### • To launch:
+#### To run application locally [no Docker] (you must have PostgreSQL installed and set up):  
 1. Activate venv
 2. `pip install -r requirements.txt`
 3. Change `DOCKER` field in `config.json` to `false`  
 4. `python manage.py makemigrations`  
 5. `python manage.py migrate`  
-6. `python manage.py runserver localhost:80` (or other port)  
+6. `python manage.py runserver 0.0.0.0:80` (or other port, for example)  
 
-#### To set up remote machine:  
-1. Connect to remote machine (via SSH)
-2. `sudo git clone <this_repo_url>`  
-3. `cd rest-api-test-task`  
-4. `sudo python3 -m venv venv`  
-5. `source venv/bin/activate`  
-6. `sudo pip3 install -r requirements.txt`  
-7. [Auto running:](https://winitpro.ru/index.php/2019/10/11/avtozagruzka-servisov-i-skriptov-v-linux/)  
-8. `sudo touch /etc/systemd/system/test-script.service` 
-9. `sudo chmod 664 /etc/systemd/system/test-script.service`
-10. `sudo nano /etc/systemd/system/test-script.service`
-11. Write file 
-12. Write entry-point SH executor  
-13. `sudo systemctl enable test-script.service`
+#### To run application locally [with Docker] (build & run)
+1. `docker-compose up -d --build`
+2. `docker-compose exec web python manage.py makemigrations --noinput`  
+3. `docker-compose exec web python manage.py migrate --noinput`  
+4. [optional] `docker-compose exec web python manage.py createsuperuser`
+5. `docker-compose up`
+
+### • To deploy:
+#### To set up remote machine:
+1. Set `docker` field to `true`/`false` (depending on if you're going to run in Docker)
+2. Push changes to GitHub repository `git add <...>`, `git commit -m <...>`, `git push`
+3. Connect to remote machine (via SSH) `ssh login@ip`. Following actions are done from remote machine
+4. `git clone <this_repo_url>`  
+5. `cd rest-api-test-task` 
+6. For non-Docker run:
+   1. `python3 -m venv venv`  
+   2. `source venv/bin/activate`  
+   3. `pip3 install -r requirements.txt`  
+   4. `python3 manage.py makemigrations`  
+   5. `python3 manage.py migrate`
+7. For Docker-run:
+   1. `docker-compose up -d --build`
+   2. `docker-compose exec web python manage.py makemigrations --noinput`  
+   3. `docker-compose exec web python manage.py migrate --noinput`  
+   4. [optional] `docker-compose exec web python manage.py createsuperuser`
+8. [Auto running:](https://winitpro.ru/index.php/2019/10/11/avtozagruzka-servisov-i-skriptov-v-linux/)  
+9. `sudo touch /etc/systemd/system/test-script.service` 
+10. `sudo chmod 664 /etc/systemd/system/test-script.service`
+11. `sudo nano /etc/systemd/system/test-script.service`
+12. Write file 
+13. Write entry-point SH executor  (for running with or without Docker)
+14. `sudo systemctl enable test-script.service`
 &nbsp;  
 
 

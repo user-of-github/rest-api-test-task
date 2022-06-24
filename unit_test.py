@@ -6,7 +6,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-API_BASEURL = 'https://responses-1920.usr.yandex-academy.ru'
+API_BASEURL = 'http://localhost:80'
 
 
 ROOT_ID = "069cb8d7-bbdd-47d3-ad8f-82ef4c269df1"
@@ -239,8 +239,8 @@ def test_nodes():
 
 def test_sales():
     status, response = request(f'/sales?date=2022-02-04T00:00:00.000Z')
-    print(response)
-    print(status)
+    # print(response)
+    # print(status)
     assert status == 200, f"Expected HTTP status code 200, got {status}"
     print("Test sales passed.")
 
@@ -270,7 +270,7 @@ def test_delete():
 def test_all():
     test_import()
     test_nodes()
-    #test_sales() # I have sales, but sometimes DEPLOYED app responses with 500
+    test_sales() # I have sales, but sometimes DEPLOYED app responses with 500
     #test_stats()
     test_delete()
 
