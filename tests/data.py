@@ -137,3 +137,60 @@ DATA_TO_MOVE_FROM_CATEGORY: dict = {
     ],
     'updateDate': '2022-06-08T16:00:00.000Z'
 }
+
+DATA_EMPTY_CATEGORY: dict = {
+    'items': [
+        {
+            'type': 'CATEGORY',
+            'name': 'Умные колонки',
+            'id': '74b81fad-9cdc-4b36-8927-c123afed5cf4',
+            'parentId': '069cb8d7-bbdd-47d3-ad8f-82ef4c269df1'
+        }
+    ],
+    'updateDate': '2022-06-08T16:00:00.000Z'
+}
+
+OFFER_FOR_THIS_CATEGORY: dict = {
+    'items': [
+        {
+            'type': 'OFFER',
+            'name': 'Тындекс Станция Мега',
+            'id': '74b81fad-9cdc-4b88-8888-c123afed5cf8',
+            'price': 1000,
+            'parentId': '74b81fad-9cdc-4b36-8927-c123afed5cf4'
+        }
+    ],
+    'updateDate': '2022-06-08T17:00:00.000Z'
+}
+
+UPDATE_OFFER_FOR_THIS_CATEGORY: dict = {
+    'items': [
+        {
+            'type': 'OFFER',
+            'name': 'ВыНдекс Станция Мега',
+            'id': '74b81fad-9cdc-4b88-8888-c123afed5cf8',
+            'price': 1200,
+            'parentId': '74b81fad-9cdc-4b36-8927-c123afed5cf4'
+        }
+    ],
+    'updateDate': '2022-06-08T18:00:00.000Z'
+}
+
+LETS_MOVE_OFFER: dict = {
+    'items': [
+        {
+            'type': 'CATEGORY',
+            'name': 'Не умные колонки',
+            'id': '74b81fad-9cdc-4b36-7777-c123afed5cf4',
+            'parentId': '069cb8d7-bbdd-47d3-ad8f-82ef4c269df1'
+        },
+        {
+            'type': 'OFFER',
+            'name': 'ВыНдекс Станция Мега (теперь обычная колонка)',
+            'id': '74b81fad-9cdc-4b88-8888-c123afed5cf8',
+            'price': 1205,
+            'parentId': '74b81fad-9cdc-4b36-7777-c123afed5cf4'
+        }
+    ],
+    'updateDate': '2022-06-08T19:00:00.000Z'
+}

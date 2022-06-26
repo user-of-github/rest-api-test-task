@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from .custom_types import SHOP_UNIT_TYPES
+from .constants import SHOP_UNIT_TYPES
 from .models import ShopUnit
 
 

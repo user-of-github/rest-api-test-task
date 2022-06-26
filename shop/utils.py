@@ -1,4 +1,5 @@
-from .custom_types import SHOP_UNIT_TYPES
+from .custom_types import ERROR_400, ERROR_404
+from .constants import SHOP_UNIT_TYPES
 from .models import ShopUnit, HistoryTable, ShopUnitHistory
 from dateutil import parser
 
@@ -39,10 +40,10 @@ def remove_item_from_history(id_to_delete: str) -> None:
 
 
 def update_parent_prices_after_creating(item_to_start) -> None:
-    price_to_add: int = item_to_start.price
-
     if item_to_start.parentId is None:
         return
+
+    price_to_add: int = item_to_start.price
 
     nexts = ShopUnit.objects.filter(id=item_to_start.parentId)
 
@@ -55,7 +56,7 @@ def update_parent_prices_after_creating(item_to_start) -> None:
         nexts = ShopUnit.objects.filter(id=parent.parentId)
 
 
-def update_parent_date_after_creating(item_to_start, new_date) -> None:
+def update_parent_date_after_item_creating(item_to_start, new_date: str) -> None:
     if item_to_start.parentId is None:
         return
 
@@ -68,7 +69,7 @@ def update_parent_date_after_creating(item_to_start, new_date) -> None:
         nexts = ShopUnit.objects.filter(id=parent.parentId)
 
 
-def update_parent_prices_after_deleting(nexts_initial, price_to_subtract: int, goods_count_to_subtract: int) -> None:
+def update_parent_prices_after_item_deleting(nexts_initial, price_to_subtract: int, goods_count_to_subtract: int) -> None:
     nexts = nexts_initial
 
     while len(nexts) != 0:
@@ -76,6 +77,7 @@ def update_parent_prices_after_deleting(nexts_initial, price_to_subtract: int, g
 
         parent.totally_inner_goods_count -= goods_count_to_subtract
         parent.total_inner_sum -= price_to_subtract
+
         if parent.totally_inner_goods_count != 0:
             parent.price = parent.total_inner_sum // parent.totally_inner_goods_count
         else:
@@ -110,7 +112,6 @@ def update_parents_date_after_item_updating(nexts_initial, date: str) -> None:
 
     while len(nexts) != 0:
         parent = nexts[0]
-        #print(f'UPDATING {parent.name} from {parent.date} to {date}')
         parent.date = date
         parent.save()
         nexts = ShopUnit.objects.filter(id=parent.parentId)
@@ -137,11 +138,10 @@ def create_new_item(item: dict, date: str) -> None:
         parent.children.add(created_object)
         parent.save()
 
-    # if it is an offer => update prices in all parent
+    # if it is an offer => update prices in all parents and also update dates !
     if created_object.type != SHOP_UNIT_TYPES[0][0]:
         update_parent_prices_after_creating(created_object)
-
-    update_parent_date_after_creating(created_object, date)
+        update_parent_date_after_item_creating(created_object, date)
 
     add_parents_changes_to_history(ShopUnit.objects.filter(id=created_object.parentId))
 
@@ -149,18 +149,21 @@ def create_new_item(item: dict, date: str) -> None:
 def update_existing_item(item: dict, date: str) -> None:
     existing_item = ShopUnit.objects.get(id=item['id'])
 
-    # firstly remove price and counts from statistics (maybe we move whole category, for example)
+    # firstly remove price and counts from statistics (maybe we move to another category)
     if existing_item.parentId is not None:
-        update_parent_prices_after_deleting(
-            ShopUnit.objects.filter(id=existing_item.parentId),
+        existing_item_parents = ShopUnit.objects.filter(id=existing_item.parentId)
+        update_parent_prices_after_item_deleting(
+            existing_item_parents,
             existing_item.total_inner_sum,
             existing_item.totally_inner_goods_count
         )
+        update_parents_date_after_item_updating(existing_item_parents, date)
 
-        # if moving to another category => update current parent history, than will update new parent history
+        # if moving to another category => update current parent history, after will update new parent history
         if existing_item.parentId != item['parentId']:
-            add_parents_changes_to_history(ShopUnit.objects.filter(id=existing_item.parentId))
+            add_parents_changes_to_history(existing_item_parents)
 
+    # now updating the item:
     existing_item.name = item['name']
     existing_item.date = date
     existing_item.save()
@@ -186,13 +189,12 @@ def update_existing_item(item: dict, date: str) -> None:
     existing_item.save()
     add_item_to_history_table(existing_item)
 
-    update_parent_prices_after_item_updating(
-        ShopUnit.objects.filter(id=existing_item.parentId),
-        existing_item.total_inner_sum, existing_item.totally_inner_goods_count
-    )
+    parents = ShopUnit.objects.filter(id=existing_item.parentId)
 
-    update_parents_date_after_item_updating(ShopUnit.objects.filter(id=existing_item.parentId), date)
-    add_parents_changes_to_history(ShopUnit.objects.filter(id=existing_item.parentId))
+    update_parent_prices_after_item_updating(parents, existing_item.total_inner_sum, existing_item.totally_inner_goods_count)
+
+    update_parents_date_after_item_updating(parents, date)
+    add_parents_changes_to_history(parents)
 
 
 def remove_item(element) -> None:
@@ -207,13 +209,13 @@ def remove_item(element) -> None:
 
 
 def satisfies_date_interval(item_date_source: str, right_date_range_border_source: str) -> bool:
-    SECONDS_IN_DAY: int = 3600
+    SECONDS_IN_HOUR: int = 60 * 60
     HOURS_IN_DAY: int = 24
 
     right_border = parser.parse(right_date_range_border_source)
     item_date = parser.parse(item_date_source)
 
-    return (right_border >= item_date) and ((right_border - item_date).total_seconds() / SECONDS_IN_DAY <= HOURS_IN_DAY)
+    return (right_border >= item_date) and (((right_border - item_date).total_seconds() / SECONDS_IN_HOUR) <= HOURS_IN_DAY)
 
 
 def get_node_statistics_filtered_by_date(row_in_history_table, date_from, date_to):

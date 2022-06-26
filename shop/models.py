@@ -1,5 +1,5 @@
 from django.db import models
-from .custom_types import SHOP_UNIT_TYPES
+from .constants import SHOP_UNIT_TYPES
 
 
 class ShopUnit(models.Model):

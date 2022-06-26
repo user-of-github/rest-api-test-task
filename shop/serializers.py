@@ -1,4 +1,4 @@
-from .custom_types import SHOP_UNIT_TYPES
+from .constants import SHOP_UNIT_TYPES
 
 
 def shop_unit_to_dict(data, with_children: bool = True) -> dict:
