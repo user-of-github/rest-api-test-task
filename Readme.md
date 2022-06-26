@@ -2,13 +2,16 @@
 ![coverage](./coverage.svg)
 
 
-### Used:  
+### _Used:_  
 * _[Python](https://www.python.org/)_
 * _[Django](https://www.djangoproject.com/)_
 * _[Django Rest Framework](https://www.django-rest-framework.org/)_
 * _[PostgreSQL](https://www.postgresql.org/)_  
 * _[Docker](https://www.docker.com/)_, _[Docker Compose](https://docs.docker.com/compose/)_
-* _[PyTest](https://pypi.org/project/pytest/)_ _(with coverage)_     
+* _[PyTest](https://pypi.org/project/pytest/)_ _(with coverage)_   
+* _Deploy to remote Linux machine_
+
+### Task statement: [./task.md](task.md)
 
 
 ## _Some commands for comfortable run:_  
@@ -71,7 +74,9 @@
 ### Some demo:  
 ##### GitHub Actions demo:  
 ![GitHub Actions output](github-actions-demo.PNG)
-##### Local tests pass results:  
+##### Local own tests pass (PyTest + coverage) results:  
+![Custom tests (see in folder ./tests)](pytest_local.PNG)  
+##### Local base tests pass results:  
 ![All tests are passed](local_test_results.PNG)  
 ##### Docker running on remote Linux machine  
 ![App's logs](remote_machine_docker_running.PNG)
