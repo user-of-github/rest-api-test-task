@@ -110,7 +110,7 @@ def update_parents_date_after_item_updating(nexts_initial, date: str) -> None:
 
     while len(nexts) != 0:
         parent = nexts[0]
-        print(f'UPDATING {parent.name} from {parent.date} to {date}')
+        #print(f'UPDATING {parent.name} from {parent.date} to {date}')
         parent.date = date
         parent.save()
         nexts = ShopUnit.objects.filter(id=parent.parentId)

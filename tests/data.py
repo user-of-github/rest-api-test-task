@@ -109,5 +109,31 @@ DATA_5: dict = {
             'price': 2300
         }
     ],
-    'updateDate': '2022-04-06T16:00:00.000Z'
+    'updateDate': '2022-04-07T16:00:00.000Z'
+}
+
+DATA_TO_UPDATE: dict = {
+    'items': [
+        {
+            'type': 'OFFER',
+            'name': 'Gugle Pixel 6',
+            'id': '74b81fda-9cdc-4b63-8927-c978afed5cf4',
+            'parentId': '1cc0129a-2bfe-474c-9ee6-d435bf5fc8f2',
+            'price': 2600
+        }
+    ],
+    'updateDate': '2022-06-06T16:00:00.000Z'
+}
+
+DATA_TO_MOVE_FROM_CATEGORY: dict = {
+    'items': [
+        {
+            'type': 'OFFER',
+            'name': 'Gugle Pixel 6',
+            'id': '74b81fda-9cdc-4b63-8927-c978afed5cf4',
+            'parentId': '069cb8d7-bbdd-47d3-ad8f-82ef4c269df1',
+            'price': 5000
+        }
+    ],
+    'updateDate': '2022-06-08T16:00:00.000Z'
 }

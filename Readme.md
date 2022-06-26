@@ -1,12 +1,14 @@
 # Test task to Back-End School 2022   
 ![coverage](./coverage.svg)
 
-### Technologies used:  
-* _Python_
-* _Django_
-* _Django Rest Framework_
-* _PostgreSQL_
-* _PyTest_     
+
+### Used:  
+* _[Python](https://www.python.org/)_
+* _[Django](https://www.djangoproject.com/)_
+* _[Django Rest Framework](https://www.django-rest-framework.org/)_
+* _[PostgreSQL](https://www.postgresql.org/)_  
+* _[Docker](https://www.docker.com/)_, _[Docker Compose](https://docs.docker.com/compose/)_
+* _[PyTest](https://pypi.org/project/pytest/)_ _(with coverage)_     
 
 
 ## _Some commands for comfortable run:_  
@@ -18,30 +20,27 @@
 4. `coverage report` or `coverage html` (for generating report in HTML)
 5. Remove `coverage-badge.svg` file and run `coverage-badge -o coverage.svg`  
 
-#### To run tests [unittest from task-source]:   
+#### To run tests [base tests from task-source]:   
 1. `pip install -r requirements.txt` 
-2. Run server in Docker (see below how to run in docker) or in usual way ()
+2. Run __server in Docker__ (see below how to run in docker) or __in usual way__ (also see below)
 3. `python unit_test.py`
 
 ### • To launch:
 #### To run application locally [no Docker] (you must have PostgreSQL installed and set up):  
 1. Activate venv
 2. `pip install -r requirements.txt`
-3. Change `DOCKER` field in `config.json` to `false`  
-4. `python manage.py makemigrations`  
+3. Change `DOCKER` field in `config.json` to `false`
 5. `python manage.py migrate`  
-6. `python manage.py runserver 0.0.0.0:80` (or other port, for example)  
+6. `python manage.py runserver 0.0.0.0:80` (or other port, for example 3000)  
 
 #### To run application locally [with Docker] (build & run)
-1. !!! If not having other images, it's better to build from scratch. `docker system prune -a --volumes`
-2. `(sudo) docker-compose up -d --build`
-3. `(sudo) docker-compose exec web python manage.py makemigrations`  
-4. `(sudo) docker-compose exec web python manage.py migrate`  
-5. [optional] `(sudo) docker-compose exec web python manage.py createsuperuser`
-6. `(sudo) docker-compose up`
+1. `(sudo) docker-compose up -d --build`  
+2. `(sudo) docker-compose exec web python manage.py migrate`  
+3. [optional] `(sudo) docker-compose exec web python manage.py createsuperuser`
+4. `(sudo) docker-compose up` _// to see logs_
 
 ### • To deploy:
-#### To set up remote machine:
+#### To set up remote machine for running the application:
 1. Set `docker` field to `true`/`false` (depending on if you're going to run in Docker)
 2. Push changes to GitHub repository `git add <...>`, `git commit -m <...>`, `git push`
 3. Connect to remote machine (via SSH) `ssh login@ip`. Following actions are done from remote machine
@@ -73,8 +72,9 @@
 ##### GitHub Actions demo:  
 ![GitHub Actions output](github-actions-demo.PNG)
 ##### Local tests pass results:  
-![Import, Nodes, Sales, Delete](local_test_results.PNG)  
-
+![All tests are passed](local_test_results.PNG)  
+##### Docker running on remote Linux machine  
+![App's logs](remote_machine_docker_running.PNG)
 &nbsp;  
 
 

@@ -46,4 +46,11 @@ def test_nodes():
 
     response = client.get(path='/nodes/d515e43f-f3f8-4471-bb77-6b455071a2d3')
     assert response.status_code == 404
+    assert response.data['code'] == 404
+    assert response.data['message'] == 'Item not found'
+
+    response = client.get(path='/nodes/d515e43ff84471bb776b455071a2d3')
+    assert response.status_code == 400
+    assert response.data['code'] == 400
+    assert response.data['message'] == 'Validation Failed'
 
