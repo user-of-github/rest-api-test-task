@@ -14,12 +14,12 @@ def check_date_iso(date: str) -> bool:
     return True
 
 
-def check_valid_uuid(to_delete: str) -> bool:
-    if to_delete is None:
+def check_valid_uuid(to_check: str) -> bool:
+    if to_check is None:
         return False
 
     try:
-        uuid_obj = UUID(to_delete)
+        uuid_obj = UUID(to_check)
     except ValueError:
         return False
 

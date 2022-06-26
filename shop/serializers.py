@@ -1,7 +1,7 @@
 from .custom_types import SHOP_UNIT_TYPES
 
 
-def data_to_dict(data, with_children: bool = True) -> dict:
+def shop_unit_to_dict(data, with_children: bool = True) -> dict:
     response: dict = dict()
 
     response['id'] = data.id
@@ -18,7 +18,7 @@ def data_to_dict(data, with_children: bool = True) -> dict:
         response['children'] = list()
 
         for child in data.children.all():
-            response['children'].append(data_to_dict(child, True))
+            response['children'].append(shop_unit_to_dict(child, True))
     else:
         response['children'] = None
 

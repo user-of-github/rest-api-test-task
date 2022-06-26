@@ -6,7 +6,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-API_BASEURL = 'https://responses-1920.usr.yandex-academy.ru'
+API_BASEURL = 'http://127.0.0.1:8000'
 
 
 ROOT_ID = "069cb8d7-bbdd-47d3-ad8f-82ef4c269df1"
@@ -271,7 +271,7 @@ def test_all():
     test_import()
     test_nodes()
     test_sales() # I have sales, but sometimes DEPLOYED app responses with 500
-    #test_stats()
+    test_stats()
     test_delete()
 
 

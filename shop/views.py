@@ -2,14 +2,15 @@ from rest_framework import views, status
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-
 from .validators import check_items_for_import, check_valid_uuid, check_date_iso
 from .utils import create_new_item, update_existing_item, remove_item
 from .utils import update_parent_prices_after_deleting
 from .utils import satisfies_date_interval
+from .utils import add_parents_changes_to_history
+from .utils import get_node_statistics_filtered_by_date
 from .custom_types import Error, SHOP_UNIT_TYPES
-from .models import ShopUnit
-from .serializers import data_to_dict
+from .models import ShopUnit, HistoryTable
+from .serializers import shop_unit_to_dict
 
 
 class ImportsAPIView(views.APIView):
@@ -27,13 +28,10 @@ class ImportsAPIView(views.APIView):
         for item in received_items:
             existing_units = ShopUnit.objects
             with_similar_id = existing_units.filter(id=item['id'])
-            print(existing_units)
 
             if len(with_similar_id) == 0:
-                # print('CREATING NEW: ', item['name'])
                 create_new_item(item, received_update_date)
             elif len(with_similar_id) == 1:
-                # print(f'VIEW: GONNA UPDATE {item["name"]}')
                 update_existing_item(item, received_update_date)
 
         return Response(status=status.HTTP_200_OK)
@@ -57,6 +55,7 @@ class DeleteAPIView(views.APIView):
 
         if len(parent) != 0:
             update_parent_prices_after_deleting(parent, deleted_total_sum, deleted_goods_count)
+            add_parents_changes_to_history(parent)
 
         return Response(status=status.HTTP_200_OK)
 
@@ -73,7 +72,7 @@ class NodesAPIView(views.APIView):
 
         found_item = found_items[0]
 
-        return Response(data_to_dict(found_item), status=status.HTTP_200_OK)
+        return Response(shop_unit_to_dict(found_item), status=status.HTTP_200_OK)
 
 
 class SalesAPIView(views.APIView):
@@ -91,6 +90,33 @@ class SalesAPIView(views.APIView):
 
         for offer in all_offers:
             if satisfies_date_interval(offer.date, date_to_get):
-                response.append(data_to_dict(offer, False))
+                response.append(shop_unit_to_dict(offer, False))
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class NodeStatisticsAPIView(views.APIView):
+    def get(self, request: Request, to_get: str) -> Response:
+        if not check_valid_uuid(to_get):
+            return Response(Error(400, 'Validation Failed').to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        query_parameters = request.query_params
+
+        if 'dateStart' in query_parameters:
+            if not check_date_iso(query_parameters['dateStart']):
+                return Response(Error(400, 'Validation Failed').to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        if 'dateEnd' in query_parameters:
+            if not check_date_iso(query_parameters['dateEnd']):
+                return Response(Error(400, 'Validation Failed').to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        found_item = HistoryTable.objects.filter(id=to_get)
+
+        if len(found_item) == 0:
+            return Response(Error(404, 'Item not found').to_dict(), status=status.HTTP_404_NOT_FOUND)
+
+        filtered = get_node_statistics_filtered_by_date(found_item[0], query_parameters.get('dateStart'), query_parameters.get('dateEnd'))
+
+        response: list[dict] = list(map(lambda item: shop_unit_to_dict(item, False), filtered))
 
         return Response(response, status=status.HTTP_200_OK)
