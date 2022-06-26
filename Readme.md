@@ -58,7 +58,7 @@
    2. `docker-compose exec web python manage.py makemigrations --noinput`  
    3. `docker-compose exec web python manage.py migrate --noinput`  
    4. [optional] `docker-compose exec web python manage.py createsuperuser`
-8. [Auto running:](https://winitpro.ru/index.php/2019/10/11/avtozagruzka-servisov-i-skriptov-v-linux/)  
+8. [Auto running in container:](https://winitpro.ru/index.php/2019/10/11/avtozagruzka-servisov-i-skriptov-v-linux/)  
 9. `sudo touch /etc/systemd/system/test-script.service` 
 10. `sudo chmod 664 /etc/systemd/system/test-script.service`
 11. `sudo nano /etc/systemd/system/test-script.service`
