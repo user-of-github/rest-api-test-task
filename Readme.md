@@ -9,9 +9,13 @@
 * _[PostgreSQL](https://www.postgresql.org/)_  
 * _[Docker](https://www.docker.com/)_, _[Docker Compose](https://docs.docker.com/compose/)_
 * _[PyTest](https://pypi.org/project/pytest/)_ _(with coverage)_   
-* _Deploy to remote Linux machine_
+* _Deploy to remote Linux machine_  
+* _[GitHub Actions](https://github.com/features/actions) for:_
+  * _Build and push image to DockerHub_  
+  * _Run PyTest and show coverage results_  
 
-### Task statement: [./task.md](task.md)
+
+### Task statement: [./Task.md](Task.md)
 
 
 ## _Some commands for comfortable run:_  
