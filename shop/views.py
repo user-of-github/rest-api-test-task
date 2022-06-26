@@ -57,8 +57,9 @@ class DeleteAPIView(views.APIView):
         remove_item(found_item[0])
 
         if len(parent) != 0:
-            update_parent_prices_after_item_deleting(parent, deleted_total_sum, deleted_goods_count)
-            add_parents_changes_to_history(parent)
+            if (deleted_total_sum is not None) and (deleted_goods_count != 0):
+                update_parent_prices_after_item_deleting(parent, deleted_total_sum, deleted_goods_count)
+                add_parents_changes_to_history(parent)
 
         return Response(status=status.HTTP_200_OK)
 

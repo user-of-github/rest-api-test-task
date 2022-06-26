@@ -1,4 +1,4 @@
 {
-  "DOCKER": true,
+  "DOCKER": false,
   "DEBUG": true
 }

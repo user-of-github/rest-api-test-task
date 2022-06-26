@@ -192,5 +192,67 @@ LETS_MOVE_OFFER: dict = {
             'parentId': '74b81fad-9cdc-4b36-7777-c123afed5cf4'
         }
     ],
-    'updateDate': '2022-06-08T19:00:00.000Z'
+    'updateDate': '2022-06-10T19:00:00.000Z'
+}
+
+ANOTHER_EMPTY_SUBCATEGORY: dict = {
+    'items': [
+        {
+            'type': 'CATEGORY',
+            'name': 'Подкатегория для неумных колонок (дата у колонок не должна поменяться)',
+            'id': '74b81fad-9cdc-4b00-6666-c123afed5cf4',
+            'parentId': '74b81fad-9cdc-4b36-7777-c123afed5cf4'
+        }
+    ],
+    'updateDate': '2022-06-10T20:00:00.000Z'
+}
+
+MOVE_THIS_ANOTHER_EMPTY_SUBCATEGORY_TO_ROOT: dict = {
+    'items': [
+        {
+            'type': 'CATEGORY',
+            'name': 'Подкатегория для неумных колонок (дата у колонок не должна поменяться)',
+            'id': '74b81fad-9cdc-4b00-6666-c123afed5cf4',
+            'parentId': None
+        }
+    ],
+    'updateDate': '2022-06-10T21:00:00.000Z'
+}
+
+LAST_SUBCATEGORY_FOR_SPEAKERS_NON_EMPTY: dict = {
+    'items': [
+        {
+            'type': 'CATEGORY',
+            'name': 'Почти умные колонки',
+            'id': '74b81fad-9cdc-4b36-1111-c123afed5cf4',
+            'parentId': '74b81fad-9cdc-4b36-8927-c123afed5cf4'
+        },
+        {
+            'type': 'OFFER',
+            'name': 'GBL Churge 5',
+            'id': '74b81fad-9cdc-bd00-2222-c123afed5cf8',
+            'price': 1205,
+            'parentId': '74b81fad-9cdc-4b36-1111-c123afed5cf4'
+        }
+    ],
+    'updateDate': '2022-06-26T21:00:00.000Z'
+}
+
+
+MOVE_LAST_SUBCATEGORY_FOR_SPEAKERS_NON_EMPTY: dict = {
+    'items': [
+        {
+            'type': 'CATEGORY',
+            'name': 'Чистенькая категория для проверки',
+            'id': '74b18fad-0cdc-4b36-5555-c123afed5cf4',
+            'parentId': '069cb8d7-bbdd-47d3-ad8f-82ef4c269df1'
+        },
+        {
+            'type': 'CATEGORY',
+            'name': 'Почти умные колонки (пернёс всю категорию)',
+            'id': '74b81fad-9cdc-4b36-1111-c123afed5cf4',
+            'parentId': '74b18fad-0cdc-4b36-5555-c123afed5cf4'
+        }
+    ],
+    'updateDate': '2022-06-26T22:00:00.000Z'
 }

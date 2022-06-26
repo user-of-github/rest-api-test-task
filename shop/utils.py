@@ -143,7 +143,7 @@ def create_new_item(item: dict, date: str) -> None:
         update_parent_prices_after_creating(created_object)
         update_parent_date_after_item_creating(created_object, date)
 
-    add_parents_changes_to_history(ShopUnit.objects.filter(id=created_object.parentId))
+        add_parents_changes_to_history(ShopUnit.objects.filter(id=created_object.parentId))
 
 
 def update_existing_item(item: dict, date: str) -> None:
@@ -152,15 +152,17 @@ def update_existing_item(item: dict, date: str) -> None:
     # firstly remove price and counts from statistics (maybe we move to another category)
     if existing_item.parentId is not None:
         existing_item_parents = ShopUnit.objects.filter(id=existing_item.parentId)
-        update_parent_prices_after_item_deleting(
-            existing_item_parents,
-            existing_item.total_inner_sum,
-            existing_item.totally_inner_goods_count
-        )
-        update_parents_date_after_item_updating(existing_item_parents, date)
+
+        if (existing_item.total_inner_sum is not None) and (existing_item.totally_inner_goods_count != 0):
+            update_parent_prices_after_item_deleting(
+                existing_item_parents,
+                existing_item.total_inner_sum,
+                existing_item.totally_inner_goods_count
+            )
+            update_parents_date_after_item_updating(existing_item_parents, date)
 
         # if moving to another category => update current parent history, after will update new parent history
-        if existing_item.parentId != item['parentId']:
+        if existing_item.parentId != item['parentId'] and existing_item.price is not None and existing_item.totally_inner_goods_count != 0:
             add_parents_changes_to_history(existing_item_parents)
 
     # now updating the item:
@@ -194,7 +196,9 @@ def update_existing_item(item: dict, date: str) -> None:
     update_parent_prices_after_item_updating(parents, existing_item.total_inner_sum, existing_item.totally_inner_goods_count)
 
     update_parents_date_after_item_updating(parents, date)
-    add_parents_changes_to_history(parents)
+
+    if existing_item.price is not None:
+        add_parents_changes_to_history(parents)
 
 
 def remove_item(element) -> None:

@@ -4,8 +4,7 @@
 
 ### _Used:_  
 * _[Python](https://www.python.org/)_
-* _[Django](https://www.djangoproject.com/)_
-* _[Django Rest Framework](https://www.django-rest-framework.org/)_
+* _[Django](https://www.djangoproject.com/)_,  _[Django Rest Framework](https://www.django-rest-framework.org/)_
 * _[PostgreSQL](https://www.postgresql.org/)_  
 * _[Docker](https://www.docker.com/)_, _[Docker Compose](https://docs.docker.com/compose/)_
 * _[PyTest](https://pypi.org/project/pytest/)_ _(with coverage)_   
